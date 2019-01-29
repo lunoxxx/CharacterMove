@@ -32,6 +32,39 @@ public class MyFrame extends JFrame implements KeyListener{
 			drawing.moveLeft();
 			System.out.println("pos:" + drawing.x + ", " + drawing.y);
 		}
+		else if(e.getKeyCode() == KeyEvent.VK_D){
+			drawing.kick();
+			System.out.println("kick");
+		}	
+		else if(e.getKeyCode() == KeyEvent.VK_S){
+			drawing.punch();
+			System.out.println("punch");
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_SPACE){
+			drawing.knockdown();
+			System.out.println("knock down");
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_F){
+			drawing.bow();
+			System.out.println("shoot bow");
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_E){
+			drawing.jump();
+			System.out.println("jump");
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_V){
+			drawing.slide();
+			System.out.println("slide");
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_R){
+			drawing.wallslide();
+			System.out.println("wall slide");
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_ENTER){
+			drawing.airattack();
+			System.out.println("air attack");
+		}
+
 		drawing.reloadImage();
 	}
 
@@ -54,6 +87,6 @@ public class MyFrame extends JFrame implements KeyListener{
 		gameFrame.getContentPane().add(gameFrame.drawing);
 		gameFrame.getContentPane().setBackground(LIGHTGREEN);
 		gameFrame.addKeyListener(gameFrame);
-		System.out.println("Practical Programming");
+		System.out.println("LET'S GO! ");
 	}
 }
