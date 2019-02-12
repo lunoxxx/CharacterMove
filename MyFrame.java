@@ -3,7 +3,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.Color;
 
-
+//resizable = false
 public class MyFrame extends JFrame implements KeyListener{
 
 	Draw drawing;
@@ -64,8 +64,9 @@ public class MyFrame extends JFrame implements KeyListener{
 			drawing.airattack();
 			System.out.println("air attack");
 		}
-
-		drawing.reloadImage();
+		else if(e.getKeyCode() == KeyEvent.VK_A){
+			drawing.spawnEnemy();
+		}
 	}
 
 

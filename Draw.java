@@ -1,10 +1,12 @@
 import javax.swing.JComponent;
+import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.Random;
 
 public class Draw extends JComponent {
 	
@@ -12,12 +14,21 @@ public class Draw extends JComponent {
 	private BufferedImage backgroundImage;
 	public URL resource = getClass().getResource("run0.png");
 
-	public int x = 30;
-	public int y = 30;
+	public int x = 300;
+	public int y = 300;
+	public int height = 0;
+	public int width = 0;
 
 	public int state = 0;
+	
+	public Random randomizer;
+
+	public int enemyCount;
+	Enemy[] enemies = new Enemy[15];
 
 	public Draw(){
+		randomizer = new Random();
+		spawnEnemy();
 		try{
 			image = ImageIO.read(resource);
 			backgroundImage = ImageIO.read(getClass().getResource("bg.jpg"));
@@ -26,7 +37,43 @@ public class Draw extends JComponent {
 		catch(IOException e){
 			e.printStackTrace();
 		}
+		height = image.getHeight();
+		width = image.getWidth();
+
+		startGame();
 	}
+
+	public void startGame(){
+		Thread gameThread = new Thread(new Runnable(){
+			public void run(){
+				while(true){
+					try{
+						for(int c = 0; c < enemies.length; c++){
+							if(enemies[c]!=null){
+								enemies[c].moveTo(x,y);
+								repaint();
+							}
+						}
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+							e.printStackTrace();
+					}
+				}
+			}
+		});
+		gameThread.start();
+	}
+
+
+
+	public void spawnEnemy(){
+		if(enemyCount <15){
+			enemies[enemyCount] = new Enemy(randomizer.nextInt(100),randomizer.nextInt(100), this);
+			enemyCount++;
+		}
+	}
+
+
 
 	public void reloadImage(){
 		state++;
@@ -81,6 +128,13 @@ public class Draw extends JComponent {
 						e.printStackTrace();
 					}
 				}
+				for(int x=0; x<enemies.length; x++){
+					if(enemies[x]!=null){
+						if(enemies[x].contact){
+							enemies[x].life = enemies[x].life - 15; 
+						}
+					}
+				}
 			}
 		});
 		thread1.start();
@@ -108,6 +162,13 @@ public class Draw extends JComponent {
 						Thread.sleep(130);
 					} catch(InterruptedException e){
 						e.printStackTrace();
+					}
+				}
+				for(int x=0; x<enemies.length; x++){
+					if(enemies[x]!=null){
+						if(enemies[x].contact){
+							enemies[x].life = enemies[x].life - 15; 
+						}
 					}
 				}
 			}
@@ -139,6 +200,13 @@ public class Draw extends JComponent {
 						e.printStackTrace();
 					}
 				}
+				for(int x=0; x<enemies.length; x++){
+					if(enemies[x]!=null){
+						if(enemies[x].contact){
+							enemies[x].life = enemies[x].life - 15; 
+						}
+					}
+				}
 			}
 		});
 		thread3.start();
@@ -165,6 +233,13 @@ public class Draw extends JComponent {
 						Thread.sleep(130);
 					} catch(InterruptedException e){
 						e.printStackTrace();
+					}
+				}
+				for(int x=0; x<enemies.length; x++){
+					if(enemies[x]!=null){
+						if(enemies[x].contact){
+							enemies[x].life = enemies[x].life - 15; 
+						}
 					}
 				}
 			}
@@ -196,6 +271,13 @@ public class Draw extends JComponent {
 						e.printStackTrace();
 					}
 				}
+				for(int x=0; x<enemies.length; x++){
+					if(enemies[x]!=null){
+						if(enemies[x].contact){
+							enemies[x].life = enemies[x].life - 15; 
+						}
+					}
+				}
 			}
 		});
 		thread5.start();
@@ -223,6 +305,13 @@ public class Draw extends JComponent {
 						Thread.sleep(100);
 					} catch(InterruptedException e){
 						e.printStackTrace();
+					}
+				}
+				for(int x=0; x<enemies.length; x++){
+					if(enemies[x]!=null){
+						if(enemies[x].contact){
+							enemies[x].life = enemies[x].life - 15; 
+						}
 					}
 				}
 			}
@@ -254,6 +343,13 @@ public class Draw extends JComponent {
 						e.printStackTrace();
 					}
 				}
+				for(int x=0; x<enemies.length; x++){
+					if(enemies[x]!=null){
+						if(enemies[x].contact){
+							enemies[x].life = enemies[x].life - 15; 
+						}
+					}
+				}
 			}
 		});
 		thread7.start();
@@ -281,6 +377,13 @@ public class Draw extends JComponent {
 						Thread.sleep(120);
 					} catch(InterruptedException e){
 						e.printStackTrace();
+					}
+				}
+				for(int x=0; x<enemies.length; x++){
+					if(enemies[x]!=null){
+						if(enemies[x].contact){
+							enemies[x].life = enemies[x].life - 15; 
+						}
 					}
 				}
 			}
@@ -324,32 +427,98 @@ public class Draw extends JComponent {
 
 	public void moveUp(){
 		y = y - 5;
+		reloadImage();
 		repaint();
+		checkCollision();
+		
+
 	}
 
 	public void moveRight(){
 		x = x + 5;
+		reloadImage();
 		repaint();
+		checkCollision();
+		
+
 	}
 
 	public void moveDown(){
 		y = y + 5;
+		reloadImage();
 		repaint();
+		checkCollision();
+		
+
 	}
 
 	public void moveLeft(){
 		x = x - 5;
+		reloadImage();	
 		repaint();
+		checkCollision();
+
+		
 	}
 
-	// public static final Color VERY_LIGHT_RED = new Color(255,102,102);
+	public void checkCollision(){
+		int xChecker = x + width;
+		int yChecker = y;
+
+		for(int x=0; x<enemies.length; x++){
+			boolean collideX = false;
+			boolean collideY = false;
+
+			if(enemies[x]!=null){
+				enemies[x].contact = false;
+
+				if(yChecker > enemies[x].yPos){
+					if(yChecker-enemies[x].yPos < enemies[x].height){
+						collideY = true;
+					}
+				}
+				else{
+					if(enemies[x].yPos - yChecker < enemies[x].height){
+						collideY = true;
+					}
+				}
+
+				if(xChecker > enemies[x].xPos){
+					if(xChecker-enemies[x].xPos < enemies[x].width){
+						collideX = true;
+					}
+				}
+				else{
+					if(enemies[x].xPos - xChecker < 2){
+						collideX = true;
+					}
+				}
+			}
+
+			if(collideX && collideY){
+				System.out.println("collision!");
+				enemies[x].contact = true;
+			}
+		}
+	}
+	
 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-
 		g.setColor(Color.YELLOW);
 		g.drawImage(backgroundImage, 0, 0, this);
 		g.drawImage(image, x, y, this);
 
+		//for loop for the enemy 
+		for(int c = 0; c < enemies.length; c++){
+			if(enemies[c]!=null){
+				// character grid for enemies
+				// g.setColor(Color.BLUE);
+				// g.fillRect(monsters[c].xPos, monsters[c].yPos+5, monsters[c].width, monsters[c].height);
+				g.drawImage(enemies[c].image, enemies[c].xPos, enemies[c].yPos, this);
+				g.setColor(Color.BLUE);
+				g.fillRect(enemies[c].xPos+7, enemies[c].yPos, enemies[c].life, 2);
+			}	
+		}
 	}
 }
