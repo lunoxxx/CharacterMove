@@ -65,7 +65,6 @@ public class Draw extends JComponent {
 	}
 
 
-
 	public void spawnEnemy(){
 		if(enemyCount <15){
 			enemies[enemyCount] = new Enemy(randomizer.nextInt(100),randomizer.nextInt(100), this);

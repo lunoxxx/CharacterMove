@@ -94,8 +94,8 @@ public class Enemy{
 		}
 
 		if(yPos<toY){
-			yPos++;
-		}
+			yPos++
+;		}
 		else if(yPos>toY){
 			yPos--;
 		}
